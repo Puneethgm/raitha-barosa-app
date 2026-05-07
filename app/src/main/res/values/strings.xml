@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Raitha-Bharosa Hub</string>
+
+    <!-- Main Navigation -->
+    <string name="dashboard">Dashboard</string>
+    <string name="calendar">Krishi Calendar</string>
+    <string name="input_center">Input Center</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+
+    <!-- Shared UI -->
+    <string name="welcome">Welcome</string>
+    <string name="hub_name">Raitha-Bharosa Hub</string>
+    <string name="soil_input_center">Soil Input Center</string>
+    <string name="calculated_sowing_index">Calculated Sowing Index</string>
+    <string name="seven_day_calendar">7-Day Krishi Calendar</string>
+    <string name="settings_title">Settings</string>
+    <string name="danger_zone">Danger Zone</string>
+    <string name="primary_crop_title">Primary Crop</string>
+    <string name="village_title">Village/City</string>
+    <string name="no_farmer_data_found">No farmer data found</string>
+    <string name="reading_saved_successfully">Reading saved successfully!</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Welcome to Raitha-Bharosa</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="enter_village">Enter village/city</string>
+    <string name="select_crop">Select primary crop</string>
+    <string name="select_language">Select language</string>
+    <string name="continue_button">Continue</string>
+    <string name="error_empty_name">Please enter your name</string>
+    <string name="error_empty_village">Please enter village/city</string>
+    <string name="error_empty_crop">Please select a crop</string>
+
+    <!-- Auth -->
+    <string name="auth_title">Login or Sign Up</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_signup">Sign Up</string>
+    <string name="auth_phone">Phone number</string>
+    <string name="auth_send_otp">Send OTP</string>
+    <string name="auth_verify_otp">Verify OTP</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_confirm_password">Confirm password</string>
+    <string name="auth_create_account">Create account</string>
+    <string name="auth_demo_otp">Demo OTP: %s</string>
+    <string name="auth_logout">Logout</string>
+    <string name="auth_otp_sent">OTP sent</string>
+    <string name="auth_create_password_info">Create your password</string>
+    <string name="auth_enter_password_info">Enter your password</string>
+    <string name="auth_enter_phone_error">Enter phone number</string>
+    <string name="auth_account_exists_error">Account already exists. Please log in.</string>
+    <string name="auth_no_account_error">No account found. Please sign up first.</string>
+    <string name="auth_enter_otp_error">Enter the OTP</string>
+    <string name="auth_invalid_otp_error">Invalid OTP</string>
+    <string name="auth_password_too_short_error">Password must be at least 4 characters</string>
+    <string name="auth_password_mismatch_error">Passwords do not match</string>
+    <string name="auth_invalid_password_error">Invalid password</string>
+
+    <!-- Dashboard -->
+    <string name="hello_farmer">Hello, %s!</string>
+    <string name="sowing_index">Sowing Index</string>
+    <string name="today_action">Today\'s Action</string>
+    <string name="current_conditions">Current Conditions</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="moisture">Moisture</string>
+    <string name="quick_stats">Quick Stats</string>
+    <string name="last_sowing">Last sowing: %s</string>
+    <string name="days_since_fertilizer">Days since fertilizer: %d</string>
+
+    <!-- Actions -->
+    <string name="action_sow">Sow Now</string>
+    <string name="action_wait">Wait</string>
+    <string name="action_ready">Get Ready</string>
+    <string name="action_fertilize">Apply Fertilizer</string>
+    <string name="action_irrigate">Irrigate</string>
+    <string name="action_rest">Rest</string>
+    <string name="action_harvest">Harvest Prep</string>
+
+    <!-- Input Center -->
+    <string name="soil_nitrogen">Soil Nitrogen (N) - kg/ha</string>
+    <string name="soil_phosphorus">Soil Phosphorus (P) - kg/ha</string>
+    <string name="soil_potassium">Soil Potassium (K) - kg/ha</string>
+    <string name="field_moisture">Field Moisture</string>
+    <string name="temperature_manual">Temperature (°C)</string>
+    <string name="save_reading">Save Reading</string>
+    <string name="recent_readings">Recent Readings</string>
+
+    <!-- Moisture Options -->
+    <string name="moisture_dry">Dry</string>
+    <string name="moisture_moist">Moist</string>
+    <string name="moisture_wet">Wet</string>
+    <string name="moisture_waterlogged">Waterlogged</string>
+
+    <!-- Krishi Calendar -->
+    <string name="day_today">Today</string>
+    <string name="day_tomorrow">Tomorrow</string>
+    <string name="day_format">Day %d</string>
+    <string name="heavy_rain_warning">⚠️ Heavy rain expected</string>
+
+    <!-- History -->
+    <string name="no_history">No history yet. Start your first season!</string>
+    <string name="add_log_entry">Add Log Entry</string>
+    <string name="log_date">Date</string>
+    <string name="log_action">Action</string>
+    <string name="log_notes">Notes</string>
+
+    <!-- Settings -->
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="kannada">Kannada</string>
+    <string name="change_crop">Change primary crop</string>
+    <string name="update_village">Update village/city</string>
+    <string name="clear_data">Clear All Data</string>
+    <string name="clear_data_confirm">Are you sure you want to delete all data?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- Common -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="loading">Loading...</string>
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+
+    <!-- Crop Options -->
+    <string name="crop_paddy">Paddy</string>
+    <string name="crop_ragi">Ragi</string>
+    <string name="crop_sugarcane">Sugarcane</string>
+    <string name="crop_maize">Maize</string>
+    <string name="crop_groundnut">Groundnut</string>
+    <string name="crop_cotton">Cotton</string>
+</resources>
