@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Raitha-Bharosa Hub</string>
+    <string name="onboarding_welcome">Welcome to Raitha-Bharosa Hub</string>
+    <string name="farmer_name_label">Farmer Name</string>
+    <string name="continue_button">Continue</string>
+    <string name="dashboard_title">Dashboard</string>
+    <string name="sowing_index_label">Sowing Index</string>
+    <string name="input_center_title">Input Center</string>
+    <string name="submit">Submit</string>
+    <string name="krishi_calendar_title">Krishi Calendar</string>
+    <string name="season_history_title">Season History</string>
+</resources>

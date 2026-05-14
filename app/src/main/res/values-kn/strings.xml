@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ರೈತ-ಭರೋಸ ಹಬ್</string>
+    <string name="onboarding_welcome">ರೈತ-ಭರೋಸ ಹಬ್ ಗೆ ಸ್ವಾಗತ</string>
+    <string name="farmer_name_label">ರೈತನ ಹೆಸರು</string>
+    <string name="continue_button">ಮುಂದುವರಿಸಿ</string>
+    <string name="dashboard_title">ಪ್ರದರ್ಶನ ಫಲಕ</string>
+    <string name="sowing_index_label">ರೋಪಣ ಸೂಚ್ಯಂಕ</string>
+    <string name="input_center_title">ಇನ್ಪುಟ್ ಕೇಂದ್ರ</string>
+    <string name="submit">ಸಲ್ಲಿಸಿ</string>
+    <string name="krishi_calendar_title">ಕೃಷಿ ಪಂಚಾಂಗ</string>
+    <string name="season_history_title">ಋತುವಿನ ಇತಿಹಾಸ</string>
+</resources>
