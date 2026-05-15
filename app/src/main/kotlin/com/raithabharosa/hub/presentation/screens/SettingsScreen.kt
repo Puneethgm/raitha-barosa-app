@@ -10,28 +10,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import com.raithabharosa.hub.data.database.RaithaBharosaDatabase
 import com.raithabharosa.hub.data.repository.AuthRepository
 import com.raithabharosa.hub.data.storage.SessionManager
 import kotlinx.coroutines.launch
-import android.content.ContextWrapper
-import android.content.Context
 import com.raithabharosa.hub.R
-
-private fun Context.findActivity(): androidx.activity.ComponentActivity? {
-    var current = this
-    while (current is ContextWrapper) {
-        if (current is androidx.activity.ComponentActivity) return current
-        current = current.baseContext
-    }
-    return null
-}
-
-private fun applyLanguage(languageTag: String) {
-    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageTag))
-}
 
 @Composable
 fun SettingsScreen(navController: NavController) {
@@ -48,7 +31,6 @@ fun SettingsScreen(navController: NavController) {
     var confirmNew by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
     var selectedTheme by remember { mutableStateOf("system") }
-    var selectedLang by remember { mutableStateOf("en") }
 
     LaunchedEffect(Unit) {
         session.currentUserIdFlow.collect { id ->
@@ -63,9 +45,7 @@ fun SettingsScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         session.themeFlow.collect { t -> if (t != null) selectedTheme = t }
     }
-    LaunchedEffect(Unit) {
-        session.languageFlow.collect { l -> if (l != null) selectedLang = l }
-    }
+
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Top) {
         Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.headlineMedium)
@@ -115,30 +95,7 @@ fun SettingsScreen(navController: NavController) {
             Text(stringResource(R.string.dark_theme))
         }
 
-        Spacer(Modifier.height(16.dp))
-        Text(stringResource(R.string.language), style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(selected = selectedLang == "en", onClick = {
-                selectedLang = "en"
-                scope.launch {
-                    session.saveLanguage("en")
-                    applyLanguage("en")
-                    context.findActivity()?.recreate()
-                }
-            })
-            Text(stringResource(R.string.english))
-            Spacer(Modifier.width(12.dp))
-            RadioButton(selected = selectedLang == "kn", onClick = {
-                selectedLang = "kn"
-                scope.launch {
-                    session.saveLanguage("kn")
-                    applyLanguage("kn")
-                    context.findActivity()?.recreate()
-                }
-            })
-            Text(stringResource(R.string.kannada))
-        }
+
 
         Spacer(Modifier.height(24.dp))
         Button(onClick = {

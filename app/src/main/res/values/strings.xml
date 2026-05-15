@@ -8,7 +8,7 @@
     <string name="sowing_index_label">Sowing Index</string>
     <string name="input_center_title">Input Center</string>
     <string name="submit">Submit</string>
-    <string name="krishi_calendar_title">Krishi Calendar</string>
+    <string name="krishi_calendar_title">Calendar</string>
     <string name="season_history_title">Season History</string>
     <string name="seven_day_forecast">7-day Forecast</string>
     <string name="splash_title">Raitha-Bharosa Hub</string>
@@ -53,6 +53,13 @@
     <string name="weather_label">Weather</string>
     <string name="wind_label">Wind %1$s km/h</string>
     <string name="scheduled_actions_label">Your Scheduled Actions</string>
+    <string name="weather_clear">Clear</string>
+    <string name="weather_cloudy">Cloudy</string>
+    <string name="weather_rainy">Rainy</string>
+    <string name="weather_fog">Fog</string>
+    <string name="weather_snow">Snow</string>
+    <string name="weather_rain_showers">Rain showers</string>
+    <string name="weather_unknown">Weather</string>
     <string name="showing_simulated_forecast">Showing simulated forecast</string>
     <string name="weather_error_fallback">Weather unavailable, showing fallback forecast</string>
     <string name="crop_sugarcane">Sugarcane</string>

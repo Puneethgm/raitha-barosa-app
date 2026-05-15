@@ -40,15 +40,24 @@ fun InputCenterScreen() {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = dateMillis)
 
+    val loadItems = suspend {
+        val uid = currentUserId
+        if (uid != null) {
+            val repo = ScheduledActionRepository(db.scheduledActionDao())
+            val res = repo.listForUser(uid)
+            if (res.isSuccess) itemsList = res.getOrNull() ?: emptyList()
+        }
+    }
+
     LaunchedEffect(Unit) {
         session.currentUserIdFlow.collect { id ->
             currentUserId = id
-            id?.let {
-                val repo = ScheduledActionRepository(db.scheduledActionDao())
-                val res = repo.listForUser(it)
-                if (res.isSuccess) itemsList = res.getOrNull() ?: emptyList()
-            }
+            scope.launch { loadItems() }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        scope.launch { loadItems() }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {

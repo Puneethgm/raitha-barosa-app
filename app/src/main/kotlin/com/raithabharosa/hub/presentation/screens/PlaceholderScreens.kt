@@ -36,6 +36,8 @@ import com.raithabharosa.hub.data.network.Temp
 import com.raithabharosa.hub.data.network.WeatherDescription
 import java.time.LocalDate
 import java.time.ZoneId
+import com.raithabharosa.hub.data.storage.SessionManager
+import androidx.compose.runtime.collectAsState
 
 
 
@@ -93,12 +95,29 @@ fun ForecastRow(day: Daily) {
             AsyncImage(model = iconUrl, contentDescription = null, modifier = Modifier.size(48.dp))
             Spacer(modifier = Modifier.size(12.dp))
             Column {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                val desc = day.weather.firstOrNull()?.description ?: ""
                 Text(text = java.time.Instant.ofEpochSecond(day.dt).atZone(java.time.ZoneId.systemDefault()).toLocalDate().toString())
-                Text(text = day.weather.firstOrNull()?.description ?: "")
+                Text(text = mapWeatherDescription(desc))
                 Text(text = "${day.temp.min}°C - ${day.temp.max}°C")
             }
         }
     }
+}
+
+@Composable
+private fun mapWeatherDescription(desc: String): String {
+    val d = desc.lowercase()
+    val res = when {
+        d.contains("clear") -> R.string.weather_clear
+        d.contains("cloud") || d.contains("overcast") -> R.string.weather_cloudy
+        d.contains("rain") || d.contains("drizzle") || d.contains("shower") -> R.string.weather_rainy
+        d.contains("fog") || d.contains("mist") -> R.string.weather_fog
+        d.contains("snow") -> R.string.weather_snow
+        d.contains("shower") -> R.string.weather_rain_showers
+        else -> R.string.weather_unknown
+    }
+    return stringResource(res)
 }
 
 @Composable
