@@ -11,7 +11,7 @@ data class FarmerProfile(
     val lastUpdated: Long = System.currentTimeMillis()
 )
 
-enum class CropType { SUGARCANE, RAGI, PADDY }
+enum class CropType { SUGARCANE, RAGI, PADDY, COTTON, CORN, WHEAT, SOYBEAN, GROUNDNUT, SUNFLOWER, CHILI, TOMATO, ONION }
 
 data class SoilData(
     val nitrogen: Float, val phosphorus: Float, val potassium: Float,

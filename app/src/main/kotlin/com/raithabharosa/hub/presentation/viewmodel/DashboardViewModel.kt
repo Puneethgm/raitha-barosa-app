@@ -170,25 +170,78 @@ class DashboardViewModel(
     private fun buildCropAdvice(cropType: CropType, status: SowingStatus, fieldAreaHectares: Double, language: String): CropAdvice {
         val canGrow = status == SowingStatus.GREEN
         val area = if (fieldAreaHectares > 0) fieldAreaHectares else 1.0
-        fun text(en: String, kn: String) = if (language.startsWith("kn")) kn else en
         return when (cropType) {
             CropType.SUGARCANE -> CropAdvice(
                 canGrowNow = canGrow,
                 fertilizer = "NPK 12:32:16 + Urea",
                 quantity = "NPK ${(50 * area).toInt()} kg, Urea ${(25 * area).toInt()} kg",
-                note = if (canGrow) text("Good window for planting sugarcane.", "ಹೆಬ್ಬತ್ತೆ ಬೆಳೆಗೆ ಇದನ್ನು ಬಿತ್ತಲು ಉತ್ತಮ ಸಮಯವಾಗಿದೆ.") else text("Wait for better moisture and temperature.", "ಉತ್ತಮ ತೇವಾಂಶ ಮತ್ತು ತಾಪಮಾನಕ್ಕಾಗಿ ಕಾಯಿರಿ.")
+                note = if (canGrow) "Good window for planting sugarcane." else "Wait for better moisture and temperature."
             )
             CropType.RAGI -> CropAdvice(
                 canGrowNow = canGrow,
                 fertilizer = "DAP + FYM",
                 quantity = "DAP ${(50 * area).toInt()} kg, FYM ${(2 * area).toInt()} tons",
-                note = if (canGrow) text("Ragi can be sown now with balanced nutrition.", "ಸಮತೂಲ ಪೋಷಕಾಂಶಗಳೊಂದಿಗೆ ರಾಗಿ ಈಗ ಬಿತ್ತಬಹುದು.") else text("Improve soil moisture before sowing.", "ಬಿತ್ತುವ ಮೊದಲು ಮಣ್ಣಿನ ತೇವಾಂಶವನ್ನು ಹೆಚ್ಚಿಸಿ.")
+                note = if (canGrow) "Ragi can be sown now with balanced nutrition." else "Improve soil moisture before sowing."
             )
             CropType.PADDY -> CropAdvice(
                 canGrowNow = canGrow,
                 fertilizer = "Urea + SSP + MOP",
                 quantity = "Urea ${(60 * area).toInt()} kg, SSP ${(100 * area).toInt()} kg, MOP ${(40 * area).toInt()} kg",
-                note = if (canGrow) text("Paddy conditions look good for transplanting.", "ಬತ್ತೆ ನಾಟಿಗೆ ಪರಿಸ್ಥಿತಿ ಚೆನ್ನಾಗಿದೆ.") else text("Hold for better water and temperature.", "ಉತ್ತಮ ನೀರು ಮತ್ತು ತಾಪಮಾನಕ್ಕಾಗಿ ಕಾಯಿರಿ.")
+                note = if (canGrow) "Paddy conditions look good for transplanting." else "Hold for better water and temperature."
+            )
+            CropType.COTTON -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "DAP + NPK",
+                quantity = "DAP ${(50 * area).toInt()} kg, NPK ${(30 * area).toInt()} kg",
+                note = if (canGrow) "Cotton sowing window is open. Apply nutrients now." else "Wait for warmer conditions."
+            )
+            CropType.CORN -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "Urea + DAP",
+                quantity = "DAP ${(50 * area).toInt()} kg, Urea ${(30 * area).toInt()} kg",
+                note = if (canGrow) "Corn is ready for sowing. Good moisture levels." else "Improve soil conditions before sowing."
+            )
+            CropType.WHEAT -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "DAP + MOP",
+                quantity = "DAP ${(50 * area).toInt()} kg, MOP ${(30 * area).toInt()} kg",
+                note = if (canGrow) "Optimal conditions for wheat sowing." else "Wait for cooler season."
+            )
+            CropType.SOYBEAN -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "NPK 0:20:20",
+                quantity = "NPK ${(40 * area).toInt()} kg",
+                note = if (canGrow) "Soybean sowing conditions are favorable." else "Monitor moisture levels."
+            )
+            CropType.GROUNDNUT -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "DAP + Gypsum",
+                quantity = "DAP ${(40 * area).toInt()} kg, Gypsum ${(20 * area).toInt()} kg",
+                note = if (canGrow) "Groundnut planting time is now." else "Wait for better soil conditions."
+            )
+            CropType.SUNFLOWER -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "NPK 15:15:15",
+                quantity = "NPK ${(40 * area).toInt()} kg",
+                note = if (canGrow) "Sunflower sowing is recommended." else "Improve moisture levels."
+            )
+            CropType.CHILI -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "NPK 10:52:10",
+                quantity = "NPK ${(50 * area).toInt()} kg",
+                note = if (canGrow) "Chili transplanting window is open." else "Wait for warmer weather."
+            )
+            CropType.TOMATO -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "DAP + Potassium",
+                quantity = "DAP ${(40 * area).toInt()} kg, K ${(20 * area).toInt()} kg",
+                note = if (canGrow) "Tomato transplanting is favorable." else "Wait for stable temperatures."
+            )
+            CropType.ONION -> CropAdvice(
+                canGrowNow = canGrow,
+                fertilizer = "NPK 10:26:26",
+                quantity = "NPK ${(40 * area).toInt()} kg",
+                note = if (canGrow) "Onion planting conditions are ideal." else "Monitor soil moisture."
             )
         }
     }

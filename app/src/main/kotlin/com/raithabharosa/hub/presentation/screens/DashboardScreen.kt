@@ -1,6 +1,8 @@
 package com.raithabharosa.hub.presentation.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,9 +12,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AssistChip
@@ -40,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.raithabharosa.hub.R
 import com.raithabharosa.hub.data.model.CropType
@@ -61,21 +67,29 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
     ) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = Color.Transparent,
+            color = MaterialTheme.colorScheme.background,
             tonalElevation = 0.dp
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Brush.linearGradient(listOf(Color(0xFF2E6B49), Color(0xFF4B8C67))))
-                    .padding(24.dp)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp)
             ) {
-                Column {
-                    Text(stringResource(R.string.dashboard_title_long), style = MaterialTheme.typography.headlineLarge, color = NeutralWhite)
-                    Text(uiState.farmerProfile?.name ?: stringResource(R.string.farmer_name_label), style = MaterialTheme.typography.bodyMedium, color = NeutralWhite.copy(alpha = 0.88f))
-                }
-                IconButton(onClick = { viewModel.refreshData(uiState.selectedCropType) }, modifier = Modifier.align(Alignment.TopEnd)) {
-                    Icon(Icons.Default.Refresh, null, tint = NeutralWhite)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(R.drawable.app_icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(stringResource(R.string.brand_title), style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onBackground)
+                        Text(uiState.farmerProfile?.name ?: stringResource(R.string.farmer_name_label), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+                    }
+                    IconButton(onClick = { viewModel.refreshData(uiState.selectedCropType) }) {
+                        Icon(Icons.Default.Refresh, null, tint = MaterialTheme.colorScheme.onBackground)
+                    }
                 }
             }
         }
@@ -85,7 +99,10 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 CircularProgressIndicator(color = GreenPrimary)
             }
         } else {
-            Column(modifier = Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 ElevatedCard(shape = RoundedCornerShape(22.dp), modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(stringResource(R.string.select_crop_type), style = MaterialTheme.typography.titleMedium)
@@ -94,8 +111,11 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                         val selectedLabel = cropLabel(uiState.selectedCropType)
                         Box {
                             OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
-                                Text(selectedLabel, modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurface)
-                                Text("v", color = MaterialTheme.colorScheme.onSurface)
+                                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                    Text(selectedLabel, modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurface)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Icon(imageVector = Icons.Default.Refresh, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f))
+                                }
                             }
                             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                 CropType.values().forEach { crop ->
@@ -153,9 +173,9 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 }
 
                 if (uiState.scheduledActions.isNotEmpty()) {
-                    Text(stringResource(R.string.scheduled_actions_label), style = MaterialTheme.typography.titleMedium, color = GreenPrimary)
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items(uiState.scheduledActions) { action: ScheduledAction ->
+                    Text(stringResource(R.string.scheduled_actions_label), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        uiState.scheduledActions.forEach { action: ScheduledAction ->
                             Card(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
                                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -179,6 +199,15 @@ private fun cropLabel(cropType: CropType): String = when (cropType) {
     CropType.SUGARCANE -> androidx.compose.ui.res.stringResource(R.string.crop_sugarcane)
     CropType.RAGI -> androidx.compose.ui.res.stringResource(R.string.crop_ragi)
     CropType.PADDY -> androidx.compose.ui.res.stringResource(R.string.crop_paddy)
+    CropType.COTTON -> androidx.compose.ui.res.stringResource(R.string.crop_cotton)
+    CropType.CORN -> androidx.compose.ui.res.stringResource(R.string.crop_corn)
+    CropType.WHEAT -> androidx.compose.ui.res.stringResource(R.string.crop_wheat)
+    CropType.SOYBEAN -> androidx.compose.ui.res.stringResource(R.string.crop_soybean)
+    CropType.GROUNDNUT -> androidx.compose.ui.res.stringResource(R.string.crop_groundnut)
+    CropType.SUNFLOWER -> androidx.compose.ui.res.stringResource(R.string.crop_sunflower)
+    CropType.CHILI -> androidx.compose.ui.res.stringResource(R.string.crop_chili)
+    CropType.TOMATO -> androidx.compose.ui.res.stringResource(R.string.crop_tomato)
+    CropType.ONION -> androidx.compose.ui.res.stringResource(R.string.crop_onion)
 }
 
 @Composable

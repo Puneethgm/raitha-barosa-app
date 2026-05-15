@@ -65,6 +65,15 @@
     <string name="crop_sugarcane">Sugarcane</string>
     <string name="crop_ragi">Ragi</string>
     <string name="crop_paddy">Paddy</string>
+    <string name="crop_cotton">Cotton</string>
+    <string name="crop_corn">Corn</string>
+    <string name="crop_wheat">Wheat</string>
+    <string name="crop_soybean">Soybean</string>
+    <string name="crop_groundnut">Groundnut</string>
+    <string name="crop_sunflower">Sunflower</string>
+    <string name="crop_chili">Chili</string>
+    <string name="crop_tomato">Tomato</string>
+    <string name="crop_onion">Onion</string>
     <string name="ready_to_sow">Ready to sow</string>
     <string name="monitor_conditions">Monitor conditions</string>
     <string name="not_ready">Not ready</string>

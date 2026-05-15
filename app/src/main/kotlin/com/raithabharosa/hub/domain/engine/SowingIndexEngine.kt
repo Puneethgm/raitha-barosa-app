@@ -109,6 +109,15 @@ class SowingIndexEngine {
         CropType.SUGARCANE -> CropCriteria(60f, 75f, 85f, 18f, 28f, 35f, 100f, 150f, 40f, 60f, 40f, 80f, 6f, 7f, 7.5f)
         CropType.RAGI -> CropCriteria(30f, 50f, 70f, 15f, 25f, 32f, 40f, 60f, 20f, 30f, 20f, 40f, 5.5f, 6.5f, 7f)
         CropType.PADDY -> CropCriteria(70f, 85f, 95f, 18f, 28f, 35f, 60f, 100f, 30f, 50f, 30f, 60f, 6.5f, 7f, 7.5f)
+        CropType.COTTON -> CropCriteria(40f, 60f, 75f, 18f, 27f, 33f, 40f, 70f, 20f, 30f, 30f, 60f, 6f, 6.8f, 7.5f)
+        CropType.CORN -> CropCriteria(45f, 65f, 80f, 15f, 25f, 32f, 60f, 100f, 25f, 40f, 30f, 60f, 6f, 7f, 7.5f)
+        CropType.WHEAT -> CropCriteria(35f, 55f, 70f, 10f, 20f, 28f, 50f, 80f, 20f, 30f, 25f, 50f, 6f, 7f, 7.5f)
+        CropType.SOYBEAN -> CropCriteria(45f, 60f, 75f, 15f, 25f, 30f, 50f, 80f, 20f, 30f, 25f, 50f, 6f, 6.8f, 7.5f)
+        CropType.GROUNDNUT -> CropCriteria(40f, 55f, 70f, 18f, 26f, 32f, 40f, 70f, 15f, 25f, 20f, 40f, 5.5f, 6.5f, 7f)
+        CropType.SUNFLOWER -> CropCriteria(35f, 50f, 65f, 12f, 22f, 30f, 40f, 70f, 20f, 30f, 25f, 50f, 6f, 7f, 8f)
+        CropType.CHILI -> CropCriteria(45f, 60f, 75f, 20f, 28f, 35f, 40f, 70f, 20f, 30f, 20f, 40f, 6f, 7f, 7.5f)
+        CropType.TOMATO -> CropCriteria(45f, 60f, 75f, 20f, 28f, 35f, 50f, 80f, 25f, 35f, 30f, 60f, 6f, 6.8f, 7f)
+        CropType.ONION -> CropCriteria(40f, 55f, 70f, 12f, 22f, 28f, 40f, 70f, 15f, 25f, 20f, 40f, 6f, 6.8f, 7.5f)
     }
 }
 
