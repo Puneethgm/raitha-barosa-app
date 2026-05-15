@@ -1,0 +1,17 @@
+# Gradle and build outputs
+.gradle/
+**/build/
+
+# Local SDK config
+local.properties
+
+# IDE files
+.idea/
+*.iml
+
+# Logs and heap dumps
+*.log
+*.hprof
+
+# OS files
+.DS_Store
