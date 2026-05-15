@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
         val dataGenerator = DataGenerator()
 
         setContent {
-            // Keep API key out of source to avoid GitHub secret scanning blocks.
-            val grokKey = "YOUR_GROQ_API_KEY"
+            // GROQ API key is provided via BuildConfig from local.properties (GROQ_API_KEY)
+            val grokKey = BuildConfig.GROQ_API_KEY
             val grokRepo = GrokRepository(grokKey)
             val chatVm = remember { ChatBotViewModel(grokRepo) }
 

@@ -4,6 +4,17 @@ plugins {
     id("kotlin-kapt")
 }
 
+// Load GROQ API key from local.properties (not committed). Add a line like:
+// GROQ_API_KEY=your_really_secret_key
+val groqApiKey: String = run {
+    val lp = rootProject.file("local.properties")
+    if (lp.exists()) {
+        val p = java.util.Properties()
+        p.load(lp.inputStream())
+        p.getProperty("GROQ_API_KEY") ?: ""
+    } else ""
+}
+
 android {
     namespace = "com.raithabharosa.hub"
     compileSdk = 34
@@ -16,6 +27,8 @@ android {
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "OPENWEATHER_API_KEY", "\"728b923e1466e0d10816e83a4a6f9fa8\"")
+        // Provide GROQ API key to the app at build time (empty if not set locally)
+        buildConfigField("String", "GROQ_API_KEY", "\"${groqApiKey}\"")
     }
 
     buildTypes {
