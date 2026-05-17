@@ -1,0 +1,501 @@
+================================================================================
+                     RAITHA-BHAROSA HUB - COMPLETE PROJECT OVERVIEW
+                          Smart Sowing Assistant for Indian Farmers
+                                   Generated: 2026-05-16
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. WHAT IS THIS PROJECT?
+--------------------------------------------------------------------------------
+
+Raitha-Bharosa Hub is a native Android application (written in Kotlin with
+Jetpack Compose) designed to help Indian farmers make smarter, data-driven
+decisions about WHEN to sow their crops.
+
+The core product is a "Sowing Index" — a score from 0 to 100% that combines
+soil data, weather conditions, and crop-specific thresholds to tell a farmer
+if now is a GREEN (good), AMBER (wait), or RED (do not sow) time to plant.
+
+On top of that, the app has:
+  - User authentication (register / login with phone + password)
+  - A farmer profile and field setup screen
+  - A real-time dashboard showing the sowing index
+  - An AI chatbot powered by Groq (LLM API) for farming questions
+  - A Krishi Calendar / task scheduler
+  - Weather integration (Open-Meteo API)
+  - GPS location fetching
+  - Bilingual support: English + Kannada
+
+The app is 100% offline-first. All data is stored locally in a Room (SQLite)
+database. Internet is only used for weather data and the AI chatbot.
+
+
+--------------------------------------------------------------------------------
+2. TECH STACK
+--------------------------------------------------------------------------------
+
+Language         : Kotlin
+UI Framework     : Jetpack Compose (Material 3) — NO XML layouts
+Architecture     : MVVM (Model-View-ViewModel) + Repository pattern
+Database         : Room (SQLite wrapper)
+Async            : Kotlin Coroutines + StateFlow
+Navigation       : Jetpack Navigation Compose
+HTTP             : Retrofit 2 + OkHttp
+AI / LLM         : Groq API (llama-3.3-70b-versatile model)
+Weather API      : Open-Meteo (free, no key required)
+Location         : Google Play Services FusedLocationProvider
+Min Android SDK  : API 26 (Android 8.0 Oreo)
+Target SDK       : API 34 (Android 14)
+Build System     : Gradle with Kotlin DSL (.kts files)
+CI/CD            : GitHub Actions (builds APK on push)
+
+
+--------------------------------------------------------------------------------
+3. PROJECT FILE STRUCTURE
+--------------------------------------------------------------------------------
+
+intership proj/
+├── app/
+│   ├── build.gradle.kts                   <-- App-level dependencies & build config
+│   └── src/main/
+│       ├── AndroidManifest.xml            <-- Permissions + Activity declaration
+│       ├── kotlin/com/raithabharosa/hub/
+│       │   ├── MainActivity.kt            <-- Entry point, wires everything together
+│       │   │
+│       │   ├── data/
+│       │   │   ├── dao/
+│       │   │   │   ├── UserDao.kt         <-- DB queries for users
+│       │   │   │   ├── FarmerDao.kt       <-- DB queries for farmer profiles
+│       │   │   │   ├── SeasonDao.kt       <-- DB queries for season records
+│       │   │   │   ├── ScheduledActionDao.kt  <-- DB queries for scheduled tasks
+│       │   │   │   ├── SoilDao.kt         <-- DB queries for soil records
+│       │   │   │   └── DailyActionDao.kt  <-- DB queries for daily tasks
+│       │   │   ├── database/
+│       │   │   │   └── RaithaBharosaDatabase.kt  <-- Room DB singleton
+│       │   │   ├── location/
+│       │   │   │   ├── FusedLocationProvider.kt  <-- GPS location logic
+│       │   │   │   └── LocationHelper.kt          <-- Location utilities
+│       │   │   ├── model/
+│       │   │   │   ├── User.kt            <-- User entity (auth)
+│       │   │   │   ├── FarmerProfile.kt   <-- Farmer + field data model
+│       │   │   │   ├── ScheduledAction.kt <-- Calendar task model
+│       │   │   │   └── SeasonRecord.kt    <-- Historical season model
+│       │   │   ├── network/
+│       │   │   │   ├── WeatherModels.kt   <-- Data classes for weather API
+│       │   │   │   └── WeatherService.kt  <-- Retrofit interface for Open-Meteo
+│       │   │   ├── repository/
+│       │   │   │   ├── AuthRepository.kt           <-- Register/Login logic
+│       │   │   │   ├── FarmerRepository.kt         <-- Farmer data + sowing index
+│       │   │   │   ├── GrokRepository.kt           <-- Groq AI chat API calls
+│       │   │   │   ├── ScheduledActionRepository.kt <-- Calendar task CRUD
+│       │   │   │   └── WeatherRepository.kt        <-- Weather API calls
+│       │   │   └── storage/
+│       │   │       └── SessionManager.kt  <-- SharedPreferences login session
+│       │   │
+│       │   ├── domain/
+│       │   │   └── engine/
+│       │   │       ├── SowingIndexEngine.kt  <-- The core scoring algorithm
+│       │   │       └── DataGenerator.kt      <-- Simulated sensor data for testing
+│       │   │
+│       │   └── presentation/
+│       │       ├── components/
+│       │       │   └── ChatBot.kt         <-- Floating draggable chatbot UI
+│       │       ├── navigation/
+│       │       │   └── NavGraph.kt        <-- All routes + screen graph
+│       │       ├── screens/
+│       │       │   ├── SplashScreen.kt    <-- Animated launch screen
+│       │       │   ├── AuthScreens.kt     <-- Login + Register screens
+│       │       │   ├── DashboardScreen.kt <-- Main home screen
+│       │       │   ├── InputCenterScreen.kt <-- Farmer profile form
+│       │       │   ├── SettingsScreen.kt  <-- Language + app settings
+│       │       │   └── PlaceholderScreens.kt <-- Skeleton screens (Market, Advisory, etc.)
+│       │       ├── theme/
+│       │       │   ├── Color.kt           <-- Brand color palette
+│       │       │   └── Theme.kt           <-- Material 3 theme setup
+│       │       └── viewmodel/
+│       │           ├── AuthViewModel.kt   <-- Login/Register state + logic
+│       │           ├── ChatBotViewModel.kt <-- Chat history + Groq API calls
+│       │           └── DashboardViewModel.kt <-- Sowing index + weather state
+│       │
+│       └── res/
+│           ├── drawable/
+│           │   ├── app_icon.png           <-- Launcher icon
+│           │   ├── chatbot_image.png      <-- Chatbot avatar
+│           │   └── ic_chatbot.xml         <-- Vector chatbot FAB icon
+│           ├── values/
+│           │   ├── strings.xml            <-- English strings
+│           │   └── styles.xml             <-- App theme style
+│           └── values-kn/
+│               └── strings.xml            <-- Kannada strings
+│
+├── build.gradle.kts                       <-- Root build file
+├── settings.gradle.kts                    <-- Project module config
+├── gradle.properties                      <-- JVM and build flags
+├── local.properties                       <-- GROQ_API_KEY (not committed to git)
+├── gradlew / gradlew.bat                  <-- Gradle wrapper scripts
+├── .github/
+│   └── workflows/
+│       └── build-apk.yml                  <-- GitHub Actions CI workflow
+├── README.md
+└── PROJECT_OVERVIEW.txt                   <-- This file
+
+
+--------------------------------------------------------------------------------
+4. HOW THE APP WORKS — SCREEN BY SCREEN
+--------------------------------------------------------------------------------
+
+SPLASH SCREEN (SplashScreen.kt)
+  - Shows animated logo on launch
+  - Checks if user is already logged in via SessionManager
+  - Routes to: Dashboard (if logged in) OR Login screen
+
+LOGIN SCREEN (AuthScreens.kt)
+  - Phone number + password input
+  - Calls AuthViewModel.login() -> AuthRepository -> UserDao
+  - On success: saves session in SessionManager, navigates to Dashboard
+
+REGISTER SCREEN (AuthScreens.kt)
+  - Name + phone + password fields
+  - Hashes password (SHA-256) before storing in Room DB
+  - On success: navigates to InputCenter (farmer profile setup)
+
+INPUT CENTER SCREEN (InputCenterScreen.kt)
+  - Form for farmer to enter: name, crop type, location, field area, soil type
+  - Saves FarmerProfile to Room DB
+  - "Get My Location" button fetches GPS coords via FusedLocationProvider
+
+DASHBOARD SCREEN (DashboardScreen.kt)
+  - Shows current Sowing Index (0-100%) with color ring: Green/Amber/Red
+  - Shows current soil readings (moisture, temperature, NPK, pH)
+  - Shows weather card (temperature, humidity, rainfall)
+  - "Refresh Data" button generates new simulated sensor data
+  - "Schedule Action" button opens task scheduling dialog
+  - Bottom navigation bar to other screens
+  - DashboardViewModel drives all state via StateFlow
+
+SETTINGS SCREEN (SettingsScreen.kt)
+  - Language toggle (English / Kannada)
+  - Logout button (clears session, goes back to Login)
+  - App version info
+
+PLACEHOLDER SCREENS (PlaceholderScreens.kt)
+  - Market Prices, Advisory, Crop Health — UI shells with "coming soon" note
+  - Krishi Calendar screen — shows scheduled tasks from Room DB
+
+CHATBOT (ChatBot.kt)
+  - Floating action button (bottom-right), draggable anywhere on screen
+  - Tap to open/close a chat dialog
+  - Sends messages to Groq LLM API (llama-3.3-70b-versatile)
+  - Maintains chat history in ChatBotViewModel
+  - Farming-context system prompt so answers are agriculture-focused
+  - Works on any screen — overlaid on top of all content
+
+
+--------------------------------------------------------------------------------
+5. THE SOWING INDEX ALGORITHM (SowingIndexEngine.kt)
+--------------------------------------------------------------------------------
+
+Takes SoilData + WeatherData + crop type and returns a score 0.0–1.0.
+
+FACTOR WEIGHTS:
+  - Soil Moisture    25%
+  - Temperature      20%
+  - NPK Levels       25%  (Nitrogen + Phosphorus + Potassium averaged)
+  - Weather          20%  (humidity + rainfall combined)
+  - pH               10%
+
+Each factor is scored against CROP-SPECIFIC thresholds:
+
+  SUGARCANE:  Moisture 60-85%, Temp 18-35°C, pH 6.0-7.5
+  RAGI:       Moisture 30-70%, Temp 15-32°C, pH 5.5-7.0
+  PADDY:      Moisture 70-95%, Temp 18-35°C, pH 5.5-7.0
+  COTTON:     Moisture 40-70%, Temp 20-35°C, pH 6.0-8.0
+  CORN:       Moisture 50-80%, Temp 18-30°C, pH 5.8-7.0
+  (others default to RAGI thresholds)
+
+STATUS INTERPRETATION:
+  >= 0.70 -> GREEN  ("Excellent conditions! Optimal sowing window.")
+  >= 0.50 -> AMBER  ("Conditions are borderline. Consider waiting...")
+  <  0.50 -> RED    ("Conditions are not suitable for sowing.")
+
+The engine also calculates a nextCheckIn time (6h / 24h / 48h) based on status.
+
+
+--------------------------------------------------------------------------------
+6. AI CHATBOT — GROQ INTEGRATION (GrokRepository.kt)
+--------------------------------------------------------------------------------
+
+  - Uses Groq's REST API endpoint: https://api.groq.com/openai/v1/chat/completions
+  - Model: llama-3.3-70b-versatile
+  - API key stored in local.properties as GROQ_API_KEY, injected via BuildConfig
+  - System prompt: "You are a helpful agricultural assistant for Indian farmers..."
+  - Request/response uses standard OpenAI-compatible chat format
+  - ChatBotViewModel keeps message list as StateFlow<List<ChatMessage>>
+  - Network call done with Retrofit + OkHttp, parsed with Gson
+
+Flow:
+  User types message
+    -> ChatBotViewModel.sendMessage()
+    -> GrokRepository.chat(messages)
+    -> HTTP POST to Groq API
+    -> Response parsed, assistant reply added to message list
+    -> UI recomposes via StateFlow
+
+
+--------------------------------------------------------------------------------
+7. WEATHER INTEGRATION (WeatherRepository.kt + WeatherService.kt)
+--------------------------------------------------------------------------------
+
+  - Uses Open-Meteo API (free, no key needed)
+  - URL: https://api.open-meteo.com/v1/forecast
+  - Fetches: temperature_2m, relative_humidity_2m, precipitation, wind_speed_10m
+  - Takes lat/lon from GPS or a default location
+  - WeatherData is passed to DashboardViewModel and displayed on Dashboard
+  - Also feeds into SowingIndexEngine weather factor
+
+
+--------------------------------------------------------------------------------
+8. DATABASE SCHEMA (Room)
+--------------------------------------------------------------------------------
+
+TABLE: users
+  id             INT  (auto primary key)
+  username       TEXT
+  phone          TEXT
+  passwordHash   TEXT (SHA-256)
+  createdAt      LONG (epoch ms)
+
+TABLE: farmer_profiles
+  id                  INT
+  name                TEXT
+  crop                TEXT
+  location            TEXT
+  fieldAreaHectares   DOUBLE
+  soilType            TEXT
+  createdAt / lastUpdated  LONG
+
+TABLE: season_records
+  id             INT
+  farmerId       INT (foreign key -> farmer_profiles)
+  cropName       TEXT
+  sowingDate     LONG
+  harvestDate    LONG
+  yield          FLOAT
+  notes          TEXT
+
+TABLE: scheduled_actions
+  id             INT
+  title          TEXT
+  description    TEXT
+  scheduledDate  LONG
+  isCompleted    BOOLEAN
+  actionType     TEXT
+  farmerId       INT
+
+TABLE: soil_records  (used indirectly via FarmerDao)
+  (tracks historical soil test readings)
+
+TABLE: daily_actions
+  (Krishi Calendar tasks — title, date, done/not done)
+
+
+--------------------------------------------------------------------------------
+9. AUTHENTICATION FLOW (AuthRepository.kt + SessionManager.kt)
+--------------------------------------------------------------------------------
+
+REGISTER:
+  1. Validate inputs (name, phone, password not blank)
+  2. Check if phone already exists in DB (UserDao.getUserByPhone)
+  3. Hash password with SHA-256
+  4. Insert User into DB
+  5. Save userId + username in SharedPreferences (SessionManager)
+  6. Return success
+
+LOGIN:
+  1. Look up user by phone number
+  2. Hash input password and compare with stored hash
+  3. On match: save session in SharedPreferences
+  4. Return success or error message
+
+SESSION:
+  - SessionManager wraps SharedPreferences
+  - Stores: userId (Int), username (String), isLoggedIn (Boolean)
+  - Checked at splash screen to skip login if session exists
+  - Cleared on logout
+
+
+--------------------------------------------------------------------------------
+10. NAVIGATION STRUCTURE (NavGraph.kt)
+--------------------------------------------------------------------------------
+
+Routes defined as constants:
+  "splash"       -> SplashScreen
+  "login"        -> LoginScreen
+  "register"     -> RegisterScreen
+  "dashboard"    -> DashboardScreen
+  "input_center" -> InputCenterScreen
+  "settings"     -> SettingsScreen
+  "calendar"     -> KrishiCalendarScreen
+  "market"       -> MarketPricesScreen
+  "advisory"     -> AdvisoryScreen
+  "crop_health"  -> CropHealthScreen
+
+Start destination: "splash"
+
+The NavGraph receives repositories and viewmodel factories as parameters,
+passed down from MainActivity to avoid global singletons.
+
+
+--------------------------------------------------------------------------------
+11. PERMISSIONS (AndroidManifest.xml)
+--------------------------------------------------------------------------------
+
+  android.permission.INTERNET              -- Weather API, Groq API
+  android.permission.ACCESS_FINE_LOCATION  -- GPS for field location
+  android.permission.ACCESS_COARSE_LOCATION -- Fallback location
+
+
+--------------------------------------------------------------------------------
+12. DEPENDENCIES (app/build.gradle.kts)
+--------------------------------------------------------------------------------
+
+JETPACK COMPOSE
+  androidx.compose.bom                  (BOM for version alignment)
+  androidx.compose.ui, ui-tooling
+  androidx.compose.material3
+  androidx.activity:activity-compose
+
+ROOM (DATABASE)
+  androidx.room:room-runtime
+  androidx.room:room-ktx
+  androidx.room:room-compiler (kapt)
+
+LIFECYCLE / VIEWMODEL
+  androidx.lifecycle:lifecycle-viewmodel-compose
+  androidx.lifecycle:lifecycle-runtime-ktx
+
+NAVIGATION
+  androidx.navigation:navigation-compose
+
+NETWORKING
+  com.squareup.retrofit2:retrofit
+  com.squareup.retrofit2:converter-gson
+  com.squareup.okhttp3:okhttp
+  com.squareup.okhttp3:logging-interceptor
+
+LOCATION
+  com.google.android.gms:play-services-location
+
+COROUTINES
+  org.jetbrains.kotlinx:kotlinx-coroutines-android
+
+GROQ API KEY
+  Read from local.properties -> exposed via BuildConfig.GROQ_API_KEY
+
+
+--------------------------------------------------------------------------------
+13. BUILD & RUN INSTRUCTIONS
+--------------------------------------------------------------------------------
+
+PREREQUISITES:
+  - Android Studio Hedgehog (2023.1) or newer
+  - Java 17
+  - Android SDK API 26+
+  - A physical Android device OR emulator (API 26+)
+  - (Optional) Groq API key from https://console.groq.com
+
+SETUP:
+  1. Open the project folder in Android Studio
+  2. Create local.properties in the project root (if not present):
+       sdk.dir=/path/to/your/Android/Sdk
+       GROQ_API_KEY=your_groq_key_here
+  3. Let Gradle sync complete
+
+BUILD APK:
+  ./gradlew assembleDebug
+  Output: app/build/outputs/apk/debug/app-debug.apk
+
+INSTALL ON DEVICE:
+  ./gradlew installDebug
+  (Device must be connected with USB debugging enabled)
+
+OR use Android Studio's Run button (green triangle).
+
+CI/CD:
+  .github/workflows/build-apk.yml automatically builds the APK
+  on every push to GitHub. The APK is uploaded as a build artifact.
+
+
+--------------------------------------------------------------------------------
+14. KEY DESIGN DECISIONS
+--------------------------------------------------------------------------------
+
+1. OFFLINE FIRST
+   All core functionality works without internet. Room DB is the single source
+   of truth. Network calls (weather, AI) are supplementary.
+
+2. NO XML LAYOUTS
+   100% Jetpack Compose UI. No legacy View system. Faster iteration, better
+   state management, less boilerplate.
+
+3. SIMULATED SENSOR DATA
+   DataGenerator creates realistic randomized soil/weather readings so the app
+   is fully demo-able without real IoT sensors connected.
+
+4. GROQ OVER OPENAI
+   Groq's free tier and fast inference made it the practical choice for the
+   farming chatbot feature during development/internship.
+
+5. OPEN-METEO FOR WEATHER
+   No API key needed. Simple REST API. Works globally including rural India.
+
+6. MANUAL DI (NO HILT/DAGGER)
+   Dependencies are manually wired in MainActivity and passed down. Keeps the
+   project simple for an internship/MVP scope without DI framework overhead.
+
+
+--------------------------------------------------------------------------------
+15. KNOWN LIMITATIONS / FUTURE WORK
+--------------------------------------------------------------------------------
+
+CURRENT LIMITATIONS:
+  - No real IoT sensor integration (uses simulated data)
+  - Single farmer per device (no multi-farmer accounts)
+  - No cloud sync or backup
+  - Market Prices, Advisory, Crop Health screens are stubs
+  - No push notifications
+  - No real-time weather alerts
+
+PLANNED PHASE 2:
+  - Real soil sensor Bluetooth/WiFi integration
+  - Cloud sync via Firebase or custom backend
+  - Government scheme integration (PM-Kisan, etc.)
+  - Crop disease photo detection (ML model)
+  - Market price feed from government APIs
+  - WhatsApp notifications for sowing windows
+  - Multi-language expansion (Hindi, Telugu, Tamil)
+
+
+--------------------------------------------------------------------------------
+16. SUMMARY
+--------------------------------------------------------------------------------
+
+Raitha-Bharosa Hub is a complete, production-ready MVP Android app for Indian
+farmers. It combines a scientifically-weighted sowing readiness algorithm,
+local data persistence, AI-powered chat assistance, and real weather data into
+a single offline-capable app with a clean Material 3 UI.
+
+  Platform   : Android (Kotlin + Jetpack Compose)
+  Architecture: MVVM + Repository
+  Database   : Room (SQLite), 5 tables
+  Networking : Retrofit (Groq AI + Open-Meteo weather)
+  Location   : FusedLocationProvider (GPS)
+  Auth       : Phone + Password (SHA-256, stored locally)
+  Languages  : English + Kannada
+  Min SDK    : Android 8.0 (API 26)
+  Status     : MVP Complete
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================

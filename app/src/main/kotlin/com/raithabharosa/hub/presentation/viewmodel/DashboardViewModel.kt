@@ -78,15 +78,15 @@ class DashboardViewModel(
                             } catch (_: Throwable) {}
                             val wf = weatherRepo.get7DayForecast(lat, lon)
                             if (wf.isSuccess) {
-                                val first = wf.getOrNull()?.daily?.firstOrNull()
-                                first?.let {
+                                val wr = wf.getOrNull()
+                                if (wr != null) {
                                     weatherData = WeatherData(
-                                        temperature = it.temp.day.toFloat(),
-                                        humidity = 0f,
-                                        rainfall = 0f,
-                                        windSpeed = 0f,
-                                        condition = it.weather.firstOrNull()?.description ?: "",
-                                        timestamp = it.dt * 1000
+                                        temperature = wr.currentTemp,
+                                        humidity    = wr.currentHumidity,
+                                        rainfall    = wr.currentRainfall,
+                                        windSpeed   = wr.currentWindSpeed,
+                                        condition   = wr.currentCondition,
+                                        timestamp   = System.currentTimeMillis()
                                     )
                                 }
                             }

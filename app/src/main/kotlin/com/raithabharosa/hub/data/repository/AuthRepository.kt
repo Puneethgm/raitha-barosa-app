@@ -21,18 +21,29 @@ class AuthRepository(private val userDao: UserDao) {
     }
 
     suspend fun changePassword(userId: Int, oldPassword: String, newPassword: String): Result<Unit> {
-        val user = userDao.findById(userId) ?: return Result.failure(Exception("not_found"))
-        if (user.passwordHash != sha256(oldPassword)) return Result.failure(Exception("invalid_credentials"))
-        val newHash = sha256(newPassword)
-        userDao.updatePassword(userId, newHash)
-        return Result.success(Unit)
+        return try {
+            val user = userDao.findById(userId) ?: return Result.failure(Exception("not_found"))
+            if (user.passwordHash != sha256(oldPassword)) return Result.failure(Exception("invalid_credentials"))
+            val newHash = sha256(newPassword)
+            val updatedUser = user.copy(passwordHash = newHash)
+            userDao.update(updatedUser)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     suspend fun changeUsername(userId: Int, newUsername: String): Result<Unit> {
-        val existing = userDao.findByUsername(newUsername)
-        if (existing != null && existing.id != userId) return Result.failure(Exception("username_taken"))
-        userDao.updateUsername(userId, newUsername)
-        return Result.success(Unit)
+        return try {
+            val existing = userDao.findByUsername(newUsername)
+            if (existing != null && existing.id != userId) return Result.failure(Exception("username_taken"))
+            val user = userDao.findById(userId) ?: return Result.failure(Exception("not_found"))
+            val updatedUser = user.copy(username = newUsername)
+            userDao.update(updatedUser)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     private fun sha256(input: String): String {

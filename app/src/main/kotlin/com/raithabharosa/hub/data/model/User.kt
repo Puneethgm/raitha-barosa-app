@@ -9,5 +9,6 @@ data class User(
     val username: String,
     val phone: String,
     val passwordHash: String,
+    val photoUri: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )

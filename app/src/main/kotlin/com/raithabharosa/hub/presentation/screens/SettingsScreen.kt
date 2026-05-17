@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import com.raithabharosa.hub.data.database.RaithaBharosaDatabase
 import com.raithabharosa.hub.data.repository.AuthRepository
 import com.raithabharosa.hub.data.storage.SessionManager
+import com.raithabharosa.hub.data.storage.LocaleHelper
 import kotlinx.coroutines.launch
 import com.raithabharosa.hub.R
 
@@ -31,6 +32,7 @@ fun SettingsScreen(navController: NavController) {
     var confirmNew by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
     var selectedTheme by remember { mutableStateOf("system") }
+    var selectedLanguage by remember { mutableStateOf("en") }
 
     LaunchedEffect(Unit) {
         session.currentUserIdFlow.collect { id ->
@@ -44,6 +46,10 @@ fun SettingsScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         session.themeFlow.collect { t -> if (t != null) selectedTheme = t }
+    }
+
+    LaunchedEffect(Unit) {
+        session.languageFlow.collect { lang -> if (lang != null) selectedLanguage = lang }
     }
 
 
@@ -96,6 +102,44 @@ fun SettingsScreen(navController: NavController) {
         }
 
 
+
+        Spacer(Modifier.height(24.dp))
+        Text(stringResource(R.string.language), style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(selected = selectedLanguage == "en", onClick = {
+                android.util.Log.d("LANG_DEBUG", "Clicked EN - saving and recreating")
+                scope.launch {
+                    session.saveLanguage("en")
+                    LocaleHelper.setLocale(context, "en")
+                    android.util.Log.d("LANG_DEBUG", "About to recreate activity")
+                    (context as? androidx.activity.ComponentActivity)?.recreate()
+                }
+            })
+            Text(stringResource(R.string.english))
+            Spacer(Modifier.width(8.dp))
+            RadioButton(selected = selectedLanguage == "hi", onClick = {
+                android.util.Log.d("LANG_DEBUG", "Clicked HI - saving and recreating")
+                scope.launch {
+                    session.saveLanguage("hi")
+                    LocaleHelper.setLocale(context, "hi")
+                    android.util.Log.d("LANG_DEBUG", "About to recreate activity")
+                    (context as? androidx.activity.ComponentActivity)?.recreate()
+                }
+            })
+            Text("हिंदी")
+            Spacer(Modifier.width(8.dp))
+            RadioButton(selected = selectedLanguage == "kn", onClick = {
+                android.util.Log.d("LANG_DEBUG", "Clicked KN - saving and recreating")
+                scope.launch {
+                    session.saveLanguage("kn")
+                    LocaleHelper.setLocale(context, "kn")
+                    android.util.Log.d("LANG_DEBUG", "About to recreate activity")
+                    (context as? androidx.activity.ComponentActivity)?.recreate()
+                }
+            })
+            Text("ಕನ್ನಡ")
+        }
 
         Spacer(Modifier.height(24.dp))
         Button(onClick = {

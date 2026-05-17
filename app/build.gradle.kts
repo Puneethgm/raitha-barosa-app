@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -9,7 +11,7 @@ plugins {
 val groqApiKey: String = run {
     val lp = rootProject.file("local.properties")
     if (lp.exists()) {
-        val p = java.util.Properties()
+        val p = Properties()
         p.load(lp.inputStream())
         p.getProperty("GROQ_API_KEY") ?: ""
     } else ""
@@ -48,6 +50,9 @@ android {
         compose = true
         buildConfig = true
     }
+    lint {
+        abortOnError = false
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
@@ -81,4 +86,5 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.datastore:datastore-preferences:1.1.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }

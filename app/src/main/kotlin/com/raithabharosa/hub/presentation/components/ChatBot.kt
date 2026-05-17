@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.raithabharosa.hub.R
 import com.raithabharosa.hub.presentation.viewmodel.ChatBotViewModel
 import com.raithabharosa.hub.presentation.viewmodel.ChatMessage
@@ -35,6 +36,7 @@ import com.raithabharosa.hub.presentation.viewmodel.Sender
 @Composable
 fun ChatBot(viewModel: ChatBotViewModel) {
     var open by remember { mutableStateOf(false) }
+    var fullscreen by remember { mutableStateOf(false) }
     var input by remember { mutableStateOf("") }
 
     androidx.compose.foundation.layout.BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -47,7 +49,7 @@ fun ChatBot(viewModel: ChatBotViewModel) {
         var fabOffset by remember { mutableStateOf(Offset.Zero) }
         LaunchedEffect(maxWidth, maxHeight) {
             if (fabOffset == Offset.Zero) {
-                fabOffset = Offset(parentWidthPx - fabSizePx - marginPx, parentHeightPx - fabSizePx - marginPx)
+                fabOffset = Offset(parentWidthPx - fabSizePx - marginPx, parentHeightPx * 0.3f)
             }
         }
         // Chat sheet
@@ -56,10 +58,10 @@ fun ChatBot(viewModel: ChatBotViewModel) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(360.dp)
+                    .let { if (fullscreen) it.fillMaxHeight() else it.height(360.dp) }
                     .align(Alignment.BottomCenter)
-                    .padding(12.dp),
-                shape = RoundedCornerShape(12.dp),
+                    .padding(if (fullscreen) 0.dp else 12.dp),
+                shape = if (fullscreen) RoundedCornerShape(0.dp) else RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f))
             ) {
                 Column(modifier = Modifier.fillMaxSize().padding(12.dp)) {
@@ -76,7 +78,11 @@ fun ChatBot(viewModel: ChatBotViewModel) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("RaithaBot", style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.weight(1f))
-                        Text("Close", modifier = Modifier.clickable { open = false }, color = MaterialTheme.colorScheme.primary)
+                        Button(onClick = { fullscreen = !fullscreen }, modifier = Modifier.height(32.dp)) {
+                            Text(if (fullscreen) "Exit" else "Fullscreen", fontSize = 12.sp)
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Close", modifier = Modifier.clickable { open = false; fullscreen = false }, color = MaterialTheme.colorScheme.primary)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     val msgs by viewModel.messages.collectAsState()
@@ -103,16 +109,27 @@ fun ChatBot(viewModel: ChatBotViewModel) {
                         if (msgs.isNotEmpty()) listState.animateScrollToItem(msgs.size - 1)
                     }
 
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(modifier = Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedTextField(
                             value = input,
                             onValueChange = { input = it },
-                            modifier = Modifier.weight(1f),
-                            placeholder = { Text("Ask crops, livestock, or farming question...") },
-                            singleLine = true
+                            modifier = Modifier.weight(1f).height(56.dp),
+                            placeholder = { Text("Ask farming question...", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                            maxLines = 2,
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                            )
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(onClick = { viewModel.sendUserMessage(input); input = "" }) { Text("Send") }
+                        Button(
+                            onClick = { viewModel.sendUserMessage(input); input = "" },
+                            modifier = Modifier.height(56.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp)
+                        ) { Text("Send", fontSize = 13.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
                     }
                 }
             }

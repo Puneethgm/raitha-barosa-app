@@ -1,13 +1,19 @@
 package com.raithabharosa.hub.presentation.navigation
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.raithabharosa.hub.presentation.screens.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,7 +34,7 @@ sealed class BottomNavItem(val route: String, @StringRes val labelRes: Int, val 
     object Dashboard : BottomNavItem("dashboard", R.string.dashboard_title, Icons.Filled.Home)
     object InputCenter : BottomNavItem("input_center", R.string.input_center_title, Icons.Filled.Edit)
     object Calendar : BottomNavItem("calendar", R.string.krishi_calendar_title, Icons.Filled.DateRange)
-    object History : BottomNavItem("history", R.string.settings_title, Icons.Filled.Settings)
+    object Profile : BottomNavItem("profile", R.string.profile_title, Icons.Filled.Person)
 }
 
 @Composable
@@ -39,7 +45,7 @@ fun AppNavigation(repository: FarmerRepository, dataGenerator: DataGenerator) {
             BottomNavItem.Dashboard,
             BottomNavItem.InputCenter,
             BottomNavItem.Calendar,
-            BottomNavItem.History
+            BottomNavItem.Profile
         )
         // top-level nav: splash -> auth -> main app
         NavHost(navController = authNavController, startDestination = "splash") {
@@ -50,31 +56,64 @@ fun AppNavigation(repository: FarmerRepository, dataGenerator: DataGenerator) {
 
             composable("main") {
                 val mainNavController = rememberNavController()
-                Scaffold(
-                    bottomBar = {
-                        NavigationBar {
-                            val navBackStackEntry = mainNavController.currentBackStackEntryAsState()
-                            val currentRoute = navBackStackEntry.value?.destination?.route
-                            items.forEach { item ->
-                                NavigationBarItem(
-                                    selected = currentRoute == item.route,
-                                    onClick = { mainNavController.navigate(item.route) {
-                                        popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    } },
-                                    icon = { Icon(imageVector = item.icon as ImageVector, contentDescription = androidx.compose.ui.res.stringResource(item.labelRes)) },
-                                    label = { Text(androidx.compose.ui.res.stringResource(item.labelRes)) }
-                                )
+                val navBackStackEntry = mainNavController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry.value?.destination?.route
+                val lastSwipeTime = remember { mutableStateOf(0L) }
+
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(currentRoute) {
+                            detectHorizontalDragGestures { change, dragAmount ->
+                                val now = System.currentTimeMillis()
+                                if (now - lastSwipeTime.value > 300) {
+                                    lastSwipeTime.value = now
+                                    val currentIndex = items.indexOfFirst { it.route == currentRoute }
+                                    if (currentIndex != -1) {
+                                        when {
+                                            dragAmount < -40 && currentIndex < items.size - 1 -> {
+                                                mainNavController.navigate(items[currentIndex + 1].route) {
+                                                    popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                            dragAmount > 40 && currentIndex > 0 -> {
+                                                mainNavController.navigate(items[currentIndex - 1].route) {
+                                                    popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
-                ) { innerPadding ->
-                    NavHost(
-                        navController = mainNavController,
-                        startDestination = BottomNavItem.Dashboard.route,
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
+                ) {
+                    Scaffold(
+                        bottomBar = {
+                            NavigationBar {
+                                items.forEach { item ->
+                                    NavigationBarItem(
+                                        selected = currentRoute == item.route,
+                                        onClick = { mainNavController.navigate(item.route) {
+                                            popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        } },
+                                        icon = { Icon(imageVector = item.icon as ImageVector, contentDescription = androidx.compose.ui.res.stringResource(item.labelRes)) },
+                                        label = { Text(androidx.compose.ui.res.stringResource(item.labelRes)) }
+                                    )
+                                }
+                            }
+                        }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = mainNavController,
+                            startDestination = BottomNavItem.Dashboard.route,
+                            modifier = Modifier.padding(innerPadding)
+                        ) {
                         composable(BottomNavItem.Dashboard.route) {
                             val context = androidx.compose.ui.platform.LocalContext.current
                             val weatherSvc = retrofit2.Retrofit.Builder().baseUrl("https://api.open-meteo.com/").addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create()).build().create(com.raithabharosa.hub.data.network.WeatherService::class.java)
@@ -91,9 +130,10 @@ fun AppNavigation(repository: FarmerRepository, dataGenerator: DataGenerator) {
                         composable(BottomNavItem.Calendar.route) {
                             KrishiCalendarScreen()
                         }
-                        composable(BottomNavItem.History.route) {
-                            SettingsScreen(navController = authNavController)
+                        composable(BottomNavItem.Profile.route) {
+                            ProfileScreen(navController = authNavController)
                         }
+                    }
                     }
                 }
             }

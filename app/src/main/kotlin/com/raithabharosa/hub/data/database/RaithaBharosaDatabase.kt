@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.raithabharosa.hub.data.dao.*
 import com.raithabharosa.hub.data.model.*
 
-@Database(entities = [FarmerProfile::class, SeasonRecord::class, SoilRecord::class, DailyAction::class, com.raithabharosa.hub.data.model.User::class, com.raithabharosa.hub.data.model.ScheduledAction::class], version = 2, exportSchema = false)
+@Database(entities = [FarmerProfile::class, SeasonRecord::class, SoilRecord::class, DailyAction::class, com.raithabharosa.hub.data.model.User::class, com.raithabharosa.hub.data.model.ScheduledAction::class], version = 3, exportSchema = false)
 abstract class RaithaBharosaDatabase : RoomDatabase() {
     abstract fun farmerDao(): FarmerDao
     abstract fun seasonDao(): SeasonDao

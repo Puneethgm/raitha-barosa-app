@@ -26,11 +26,13 @@ class ChatBotViewModel(private val repo: GrokRepository) : ViewModel() {
         if (text.isBlank()) return
         _messages.value = _messages.value + ChatMessage(Sender.USER, text)
         viewModelScope.launch {
-            val prompt = "$systemPrompt\nUser: $text\nAssistant:"
+            val conversationHistory = _messages.value.takeLast(10).joinToString("\n") { msg ->
+                if (msg.sender == Sender.USER) "User: ${msg.text}" else "Assistant: ${msg.text}"
+            }
+            val prompt = "$systemPrompt\n\n$conversationHistory"
             val res = withContext(Dispatchers.IO) { repo.send(prompt) }
             val reply = res.fold({ it }, { err -> "Error: ${err.toString()}" })
             _messages.value = _messages.value + ChatMessage(Sender.BOT, reply)
-            // If SSL/TLS handshake errors occur, run a connectivity diagnostic and show results
             val lower = reply.lowercase()
             if (lower.contains("sslhandshake") || lower.contains("tlsv1_alert") || lower.contains("unrecognized_name") || lower.contains("ssl")) {
                 val diag = withContext(Dispatchers.IO) { repo.testConnectivity() }
